@@ -6,7 +6,7 @@ export default function FooterCommom() {
       <div className='max-w-7xl px-5 mx-auto'>
         <div className='grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8'>
           <div className='lg:col-span-0'>
-            <p>© 2025 Shopee. Tất cả các quyền được bảo lưu.</p>
+            <p>© 2025 Restaurent. Tất cả các quyền được bảo lưu.</p>
           </div>
           <div className='lg:col-span-2'>
             <p>

@@ -15,3 +15,35 @@ có 3 môi trừơng khi làm việc
 ```
 
 3. Môi trường Terminal
+
+```js
+
+
+
+3 KD; - const , var (hosting : khai bao sau nhma goi trc dung cung ddc) , let
+
+
+
+
+const user = {
+  name ,
+  age
+  ,func(),
+
+  firstName : {
+    lastNam:
+  }
+}
+
+
+```
+
+```ts
+interface User {
+  name: string
+  age: number
+  func: Function
+}
+
+const user: User
+```

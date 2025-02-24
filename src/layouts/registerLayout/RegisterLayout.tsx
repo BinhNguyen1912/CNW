@@ -13,3 +13,5 @@ export default function RegisterLayout({ children }: props) {
     </div>
   )
 }
+
+//component

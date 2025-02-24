@@ -7,7 +7,8 @@ export default {
         bg_logo: '#F59F62'
       },
       colors: {
-        logo: '#F59F62'
+        logo: '#F59F62',
+        link: '#0055AA'
       }
     }
   },
