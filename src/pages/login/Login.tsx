@@ -1,20 +1,30 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { yupResolver } from '@hookform/resolvers/yup'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
-import { useFormType } from '../Register/Register'
+import Input from 'src/components/Input'
+import { schemaValidate_Login, useFormType_Login } from 'src/Until/rules'
 
 export default function Login() {
   const {
     register,
     handleSubmit,
     watch,
+    getValues,
     formState: { errors }
-  } = useForm<useFormType>() //lay ra 3 cai quan trong nhat
+  } = useForm<useFormType_Login>({
+    resolver: yupResolver(schemaValidate_Login)
+  }) //lay ra 3 cai quan trong nhat
 
-  const onSubmit = handleSubmit((data) => {
-    // console.log(data)
-  })
+  const onSubmit = handleSubmit(
+    (data) => {
+      // console.log(getValues())
+    },
+    (data) => {
+      console.log(getValues())
+    }
+  )
 
   return (
     <div className='bg-orange-300 py-11'>
@@ -27,26 +37,29 @@ export default function Login() {
               className='w-full h-auto object-cover rounded-3xl md:hidden sm:hidden lg:block'
             />
           </div>
-          <form action='' className='w-1/2 rounded-3xl  bg-white text-center px-8 py-5 shadow-sm' onSubmit={onSubmit}>
+          <form
+            action=''
+            className='w-1/2 rounded-3xl  bg-white text-center px-8 py-5 shadow-sm'
+            onSubmit={onSubmit}
+            noValidate
+          >
             <div className='text-black mb-7 text-3xl font-bold'>Đăng nhập</div>
-            <div className='mt-3'>
-              <input
-                type='email'
-                className='p-3 w-full outline-none border rounded-full border-gray-300 focus:border-gray-950 focus:shadow-sm'
-                placeholder='Email'
-              />
-              <div className='mt-1 text-red-700 min-h-[1rem] text-sm ml-2'></div>
-            </div>
-            <div className='mt-3'>
-              <input
-                type='password'
-                className='p-3 w-full rounded-full outline-none border border-gray-300 focus:border-gray-950 focus:shadow-sm'
-                placeholder='password'
-                name='password'
-                autoComplete='on'
-              />
-              <div className='mt-1 text-red-700 min-h-[1rem] text-sm ml-2'></div>
-            </div>
+            <Input
+              className='mt-3'
+              errorsMessage={errors.email?.message as string}
+              name='email'
+              placeholder='Nhập Email'
+              register={register}
+              type='email'
+            />
+            <Input
+              className='mt-3'
+              errorsMessage={errors.password?.message as string}
+              name='password'
+              placeholder='Nhập Password'
+              register={register}
+              type='password'
+            />
             <button
               type='submit'
               className='w-full mt-2 px-4 py-3 rounded-full border text-center bg-amber-400 hover:bg-black hover:text-amber-400'

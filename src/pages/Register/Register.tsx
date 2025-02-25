@@ -1,26 +1,63 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useMutation } from '@tanstack/react-query'
+import { omit } from 'lodash'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
+import { registerByUser } from 'src/api/auth.api'
 import Input from 'src/components/Input'
-import { GetRules } from 'src/Until/rules'
-export interface useFormType {
-  email: string
-  password: string
-  confirm_password: string
-  phone: string
-  name: string
-}
+import { ResponeApi } from 'src/types/untill.type'
+import { isAxiosUnprocessableEntityError } from 'src/Until/FixErrorFromAxios'
+import { schemaValidate, useFormType } from 'src/Until/rules'
+
 export default function Register() {
   const {
     register,
     handleSubmit,
-    getValues,
+    watch,
+    setError,
     formState: { errors }
-  } = useForm<useFormType>() //lay ra 3 cai quan trong nhat
-  // console.log(errors)
-  const rules = GetRules(getValues)
+  } = useForm<useFormType>({
+    resolver: yupResolver(schemaValidate)
+  }) //lay ra 3 cai quan trong nhat
+
+  const registerAccountMutation = useMutation({
+    mutationFn: (body: Omit<useFormType, 'confirm_password'>) => registerByUser(body),
+    onSuccess: (data) => {
+      console.log('success', data)
+      alert('Gui thanh cong')
+    },
+    onError: (error) => {
+      alert('that bai')
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if (isAxiosUnprocessableEntityError<ResponeApi<Omit<useFormType, 'confirm_password'>>>(error)) {
+        //ResponeApi<Omit<useFormType, 'confirm_password'>>
+        console.log(isAxiosUnprocessableEntityError<{ error: string; message: string; statusCode: string }>(error))
+        console.log(error)
+
+        const formError = error.response?.data
+        if (formError) {
+          setError('email', {
+            message: formError.message,
+            type: 'Server'
+          })
+        }
+
+        // if (formError?.email) {
+        //   setError('email', {
+        //     message: formError.email,
+        //     type: 'Server'
+        //   })
+        // }
+      }
+    }
+  })
   const onSubmit = handleSubmit((data) => {
-    // console.log(data) //Ban dau se in ra {} boi vi chua co khai bao gi no biet , vi vay khai bao duoi cac the input
+    // console.log(data)
+
+    // console.log(data) //Ban dau se in ra {} boi vi chua co khai bao gi no biet , voi data se la cac gia tri cua cac truong
+    const body = omit(data, ['confirm_password'])
+    registerAccountMutation.mutate(body)
   })
 
   //watch -> xem cac du lieu nhap vao , nhap den dau re-render lai den do
@@ -28,6 +65,9 @@ export default function Register() {
                 register co trar ve name nen bi sinh loi => xoa name 
                 , va truyen cai key cura input do vao 
                 - {...register('email')} , day la cu phap dung cho cac the input tuong tu*/
+
+  const value = watch()
+  // console.log(value)
 
   return (
     <div className='bg-orange-300 py-11'>
@@ -75,7 +115,6 @@ export default function Register() {
               className='mt-1'
               errorsMessage={errors.email?.message as string}
               placeholder='Nhập Email'
-              rules={rules.email}
               name='email'
               register={register}
               type='email'
@@ -84,7 +123,6 @@ export default function Register() {
               className='mt-1'
               errorsMessage={errors.password?.message as string}
               placeholder='Nhập mật khẩu'
-              rules={rules.password}
               name='password'
               register={register}
               type='password'
@@ -93,7 +131,6 @@ export default function Register() {
               className='mt-1'
               errorsMessage={errors.confirm_password?.message as string}
               placeholder='Xác nhận lại mật khẩu'
-              rules={rules.confirm_password}
               name='confirm_password'
               register={register}
               type='password'
@@ -102,7 +139,6 @@ export default function Register() {
               className='mt-1'
               errorsMessage={errors.name?.message as string}
               placeholder='Nhập tên '
-              rules={rules.name}
               name='name'
               register={register}
               type='text'
@@ -111,7 +147,6 @@ export default function Register() {
               className='mt-1'
               errorsMessage={errors.phone?.message as string}
               placeholder='Nhập số điện thoại'
-              rules={rules.phone}
               name='phone'
               register={register}
               type='text'

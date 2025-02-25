@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { RegisterOptions, FieldValues, Path, UseFormGetValues } from 'react-hook-form'
-import { useFormType } from 'src/pages/Register/Register'
 import * as yup from 'yup'
 
 export type Rules<T extends FieldValues> = { [K in keyof T]?: RegisterOptions<T, Path<T> & string> }
@@ -64,6 +63,38 @@ export const GetRules = (getValues?: UseFormGetValues<any>): Rules<useFormType> 
   }
 })
 
-export const Schema = yup.object({
-  // email: yup.string().email('Email không đúng định dạng!').min(6, 'Độ dài tối thiểu là 6-30 từ!').max
-})
+//Khai bao Schema -> quan ly cac truong dau vao
+export const schemaValidate = yup
+  .object({
+    email: yup
+      .string()
+      .required('Vui lòng nhập Email')
+      .email('Email không đúng định dạng!')
+      .min(6, 'Độ dài tối thiểu là 6-160 từ!')
+      .max(160, 'Độ dài tối thiểu là 6-160 từ!'),
+    password: yup
+      .string()
+      .required('Vui lòng nhập password')
+      .min(6, 'Password : Độ dài tối thiểu là 6-15 từ!')
+      .max(15, 'Password : Độ dài tối thiểu là 6-15 từ!'),
+    phone: yup
+      .string()
+      .required('Vui lòng nhập Số điện thoại')
+      .min(0, 'Vui lòng nhập đúng 10 chữ số điện thoại')
+      .max(10, 'Vui lòng nhập đúng 10 chữ số điện thoại'),
+    name: yup
+      .string()
+      .required('Vui lòng nhập họ và tên!')
+      .min(2, 'Tên không thể nào < 2!')
+      .max(30, 'Tên không thể nào > 30!'),
+    confirm_password: yup
+      .string()
+      .required('Vui lòng xác nhận lại mật khẩu')
+      .min(6, 'Password : Độ dài tối thiểu là 6-15 từ!')
+      .max(15, 'Password : Độ dài tối thiểu là 6-15 từ!')
+      .oneOf([yup.ref('password')], 'Không khớp với mật khẩu')
+  })
+  .required()
+export type useFormType = yup.InferType<typeof schemaValidate>
+export const schemaValidate_Login = schemaValidate.omit(['confirm_password', 'name', 'phone'])
+export type useFormType_Login = yup.InferType<typeof schemaValidate_Login>

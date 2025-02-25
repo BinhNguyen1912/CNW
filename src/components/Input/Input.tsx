@@ -7,7 +7,7 @@ interface Props {
   type: React.HTMLInputTypeAttribute
   placeholder: string
   register: UseFormRegister<any>
-  rules: any
+  rules?: any
   errorsMessage: string
   name: string
 }
@@ -23,6 +23,7 @@ export default function Input({ className, errorsMessage, placeholder, register,
       , va truyen cai key cura input do vao 
       - {...register('email')} , day la cu phap dung cho cac the input tuong tu*/
         {...register(name, rules)}
+        autoComplete='on'
       />
       <div className='mt-1 text-red-700 min-h-[1.25rem] text-sm ml-2'>{errorsMessage}</div>
     </div>
