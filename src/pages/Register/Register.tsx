@@ -1,74 +1,128 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { useForm } from 'react-hook-form'
+import { Link } from 'react-router-dom'
+import Input from 'src/components/Input'
+import { GetRules } from 'src/Until/rules'
+export interface useFormType {
+  email: string
+  password: string
+  confirm_password: string
+  phone: string
+  name: string
+}
 export default function Register() {
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    formState: { errors }
+  } = useForm<useFormType>() //lay ra 3 cai quan trong nhat
+  // console.log(errors)
+  const rules = GetRules(getValues)
+  const onSubmit = handleSubmit((data) => {
+    // console.log(data) //Ban dau se in ra {} boi vi chua co khai bao gi no biet , vi vay khai bao duoi cac the input
+  })
+
+  //watch -> xem cac du lieu nhap vao , nhap den dau re-render lai den do
+  /*Neu ta con de thuoc tinh name cura input se loi vi
+                register co trar ve name nen bi sinh loi => xoa name 
+                , va truyen cai key cura input do vao 
+                - {...register('email')} , day la cu phap dung cho cac the input tuong tu*/
+
   return (
     <div className='bg-orange-300 py-11'>
-      <div className='max-w-7xl px-4 mx-auto'>
+      <div className='max-w-7xl px-4 mx-auto '>
         <div className='flex justify-center   '>
-          <div className='max-w-sm pr-7'>
+          <div className='w-1/3 pr-7 lg:block md:hidden sm:hidden'>
             <img
-              src='https://i.pinimg.com/474x/7e/ed/14/7eed140453db365565e87ea4d303af87.jpg'
+              src='https://i.pinimg.com/736x/0b/18/15/0b18157ed9d98cd5526c5844013dca00.jpg'
               alt=''
-              className='w-full h-auto object-cover rounded-3xl'
+              className='w-full h-auto object-cover rounded-3xl '
             />
+            <div className='text-center py-3 px-5 mt-5'>
+              <p>
+                <b>Retaurent</b> xin chân thành cảm ơn quý khách hàng thân yêu đã sử dụng dịch vụ của chúng tôi . Mọi
+                thắc mắc xin liên hệ qua Fanpage : "{' '}
+                <Link to='https://google.com' className='text-blue-700' target='_blank'>
+                  Google
+                </Link>{' '}
+                "
+              </p>
+            </div>
           </div>
-          <form action='' className='w-1/2 rounded-xl  bg-white text-center px-8 py-5 shadow-sm'>
-            <div className='text-black mb-7 text-3xl font-bold'>Đăng ký</div>
-            <div className='mt-3'>
+          <form action='' className='w-1/2 rounded-xl  bg-white px-8 py-5 shadow-sm' onSubmit={onSubmit} noValidate>
+            <div className='text-black mb-7 text-3xl font-bold text-center'>Đăng ký</div>
+            {/* <div className='mt-1'>
               <input
                 type='email'
                 className='p-3 w-full outline-none border rounded-full border-gray-300 focus:border-gray-950 focus:shadow-sm'
                 placeholder='Email'
-                name='email'
+                {...register('email', rules.email)}
               />
-              <div className='mt-1 text-red-700 min-h-[1rem] text-sm ml-2'></div>
-            </div>
-            <div className='mt-3'>
+              <div className='mt-1 text-red-700 min-h-[1.25rem] text-sm ml-2'>{errors.email?.message}</div>
+            </div> */}
+            {/* <div className='mt-1'>
               <input
                 type='password'
                 className='p-3 w-full rounded-full outline-none border border-gray-300 focus:border-gray-950 focus:shadow-sm'
                 placeholder='password'
-                name='password'
+                {...register('password', rules.password)}
+                autoComplete='on'
               />
-              <div className='mt-1 text-red-700 min-h-[1rem] text-sm ml-2'></div>
-            </div>
-            <div className='mt-3'>
-              <input
-                type='text'
-                className='p-3 w-full rounded-full outline-none border border-gray-300 focus:border-gray-950 focus:shadow-sm'
-                placeholder='Name'
-                name='name'
-              />
-              <div className='mt-1 text-red-700 min-h-[1rem] text-sm ml-2'></div>
-            </div>
-            <div className='mt-3'>
-              <input
-                type='text'
-                className='p-3 w-full rounded-full outline-none border border-gray-300 focus:border-gray-950 focus:shadow-sm'
-                placeholder='Phone'
-                name='phone'
-              />
-              <div className='mt-1 text-red-700 min-h-[1rem] text-sm ml-2'></div>
-            </div>
+              <div className='mt-1 text-red-700 min-h-[1.25rem] text-sm ml-2'>{errors.password?.message}</div>
+            </div> */}
+            <Input
+              className='mt-1'
+              errorsMessage={errors.email?.message as string}
+              placeholder='Nhập Email'
+              rules={rules.email}
+              name='email'
+              register={register}
+              type='email'
+            />
+            <Input
+              className='mt-1'
+              errorsMessage={errors.password?.message as string}
+              placeholder='Nhập mật khẩu'
+              rules={rules.password}
+              name='password'
+              register={register}
+              type='password'
+            />
+            <Input
+              className='mt-1'
+              errorsMessage={errors.confirm_password?.message as string}
+              placeholder='Xác nhận lại mật khẩu'
+              rules={rules.confirm_password}
+              name='confirm_password'
+              register={register}
+              type='password'
+            />
+            <Input
+              className='mt-1'
+              errorsMessage={errors.name?.message as string}
+              placeholder='Nhập tên '
+              rules={rules.name}
+              name='name'
+              register={register}
+              type='text'
+            />
+            <Input
+              className='mt-1'
+              errorsMessage={errors.phone?.message as string}
+              placeholder='Nhập số điện thoại'
+              rules={rules.phone}
+              name='phone'
+              register={register}
+              type='text'
+            />
             <button className='w-full mt-2 px-4 py-3 rounded-full border text-center bg-amber-400'>ĐĂNG KÝ</button>
-            {/* <div className='mt-3 flex justify-between items-center text-sm '>
-              <a href='#'>
-                <p className='text-blue-800'>Quên mật khẩu ?</p>
-              </a>
-              <a href='#'>
-                <p className='text-blue-800'>Đăng ký</p>
-              </a>
+            <div className='flex text-sm mt-4 justify-center'>
+              <span>Bạn đã có tài khoản ?</span>
+              <Link to='/login' className='text-red-600 '>
+                Đăng nhập
+              </Link>
             </div>
-            <button className='w-full mt-2 px-4 py-3 rounded-full border'>
-              <div className='flex items-center justify-center'>
-                <div className='w-7 text-center mr-2'>
-                  <img
-                    className='w-full'
-                    src='https://th.bing.com/th?id=OIP.Fll7WPtNT6jrz1oBP8GbCgHaHj&w=247&h=252&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2'
-                    alt=''
-                  />
-                </div>
-                <p>Google</p>
-              </div>
-            </button> */}
           </form>
         </div>
       </div>
