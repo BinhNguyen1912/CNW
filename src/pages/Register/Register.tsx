@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query'
 import { omit } from 'lodash'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { registerByUser } from 'src/api/auth.api'
 import Input from 'src/components/Input'
 import { ResponeApi } from 'src/types/untill.type'
@@ -20,11 +21,11 @@ export default function Register() {
   } = useForm<useFormType>({
     resolver: yupResolver(schemaValidate)
   }) //lay ra 3 cai quan trong nhat
-
   const registerAccountMutation = useMutation({
     mutationFn: (body: Omit<useFormType, 'confirm_password'>) => registerByUser(body),
     onSuccess: (data) => {
       console.log('success', data)
+      // toast()
       alert('Gui thanh cong')
     },
     onError: (error) => {
@@ -42,13 +43,6 @@ export default function Register() {
             type: 'Server'
           })
         }
-
-        // if (formError?.email) {
-        //   setError('email', {
-        //     message: formError.email,
-        //     type: 'Server'
-        //   })
-        // }
       }
     }
   })
@@ -82,7 +76,7 @@ export default function Register() {
             <div className='text-center py-3 px-5 mt-5'>
               <p>
                 <b>Retaurent</b> xin chân thành cảm ơn quý khách hàng thân yêu đã sử dụng dịch vụ của chúng tôi . Mọi
-                thắc mắc xin liên hệ qua Fanpage : "{' '}
+                thắc mắc xin liên hệ qua <br /> Fanpage : "{' '}
                 <Link to='https://google.com' className='text-blue-700' target='_blank'>
                   Google
                 </Link>{' '}

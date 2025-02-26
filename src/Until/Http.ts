@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosInstance } from 'axios'
 import HttpStatusCode from './StatusCode.enum'
-import { Slide, toast } from 'react-toastify'
+import { Bounce, toast } from 'react-toastify'
 class Http {
   instance: AxiosInstance
   constructor() {
@@ -25,11 +25,17 @@ class Http {
               backgroundColor: ' #ffff',
               color: 'black',
               borderRadius: '5px',
-              fontSize: '14px'
+              fontSize: '16px'
             },
-            autoClose: 2000,
-            transition: Slide,
-            theme: 'colored'
+            autoClose: 3000,
+            position: 'top-right',
+            transition: Bounce,
+            closeButton: true,
+            pauseOnHover: true,
+            pauseOnFocusLoss: true,
+            draggable: 'touch',
+            role: 'alert',
+            theme: 'light'
           })
         }
         return Promise.reject(error)

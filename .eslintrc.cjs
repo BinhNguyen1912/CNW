@@ -1,4 +1,5 @@
 const path = require('path')
+const { stringify } = require('querystring')
 module.exports = {
   extends: [
     'eslint:recommended',

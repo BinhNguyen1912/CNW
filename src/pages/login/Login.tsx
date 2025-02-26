@@ -1,9 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { yupResolver } from '@hookform/resolvers/yup'
+import { useMutation } from '@tanstack/react-query'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
+import { login } from 'src/api/auth.api'
 import Input from 'src/components/Input'
+import { ResponeApi } from 'src/types/untill.type'
+import { isAxiosUnprocessableEntityError } from 'src/Until/FixErrorFromAxios'
 import { schemaValidate_Login, useFormType_Login } from 'src/Until/rules'
 
 export default function Login() {
@@ -12,14 +16,34 @@ export default function Login() {
     handleSubmit,
     watch,
     getValues,
+    setError,
     formState: { errors }
   } = useForm<useFormType_Login>({
     resolver: yupResolver(schemaValidate_Login)
   }) //lay ra 3 cai quan trong nhat
+  const LoginAccountMutation = useMutation({
+    mutationFn: (body: useFormType_Login) => login(body),
+    onSuccess: (data) => {
+      console.log('success', data)
+      // toast()
+      alert('Gui thanh cong')
+    },
+    onError: (error) => {
+      alert('that bai')
+      console.log(error)
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if (isAxiosUnprocessableEntityError<ResponeApi<useFormType_Login>>(error)) {
+        //ResponeApi<Omit<useFormType, 'confirm_password'>>
+
+        const formError = error.response?.data
+        console.log(formError)
+      }
+    }
+  })
   const onSubmit = handleSubmit(
     (data) => {
-      // console.log(getValues())
+      LoginAccountMutation.mutate(data)
     },
     (data) => {
       console.log(getValues())
